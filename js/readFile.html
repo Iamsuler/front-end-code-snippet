@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>readfile</title>
+</head>
+
+<body>
+  <input type="file" id="my-file">
+  <button onclick="readFile()">读取文件</button>
+  <div id="result"></div>
+  <script>
+    function readFile() {
+      var file = document.getElementById('my-file').files[0]
+      var reader = new FileReader()
+      var html = ''
+      reader.readAsText(file, 'utf-8')
+      reader.onload = (e) => {
+        var fileText = e.target.result.split('\n')
+        fileText.forEach((item, index) => {
+          var linkArr = item.split(' ')
+          html += `<li><a href="${linkArr[1]}">${linkArr[0]}</a></li>`
+        })
+        document.getElementById('result').innerHTML = html
+      }
+    }
+  </script>
+</body>
+
+</html>

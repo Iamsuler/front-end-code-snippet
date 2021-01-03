@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; object-src 'none'; style-src cdn.example.org third-party.org 'unsafe-inline'; child-src https:">
+  <title>Document</title>
+  <style>
+    #app {
+      background-image: url('https://javascript:alert("xxxxx")');
+    }
+  </style>
+  <script>
+    function evil () {
+      alert('xss')
+    }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <a href=" javascript:alert('XSS')">xss</a>
+  <!-- <script>alert("xxxxx")</script> -->
+
+  <img src="http://www.ruanyifeng.com/blogimg/asset/2016/bg2016091302.jpg" onerror="evil()">
+  <!-- <script src="data:text/javascript,evil()"></script> -->
+  <script>
+    // let string = new URLSearchParams(location.search).get('key')
+    let string = '<script>document.write("xxx")<\/script>'
+    console.log(string)
+    document.getElementById('app').innerHTML = string
+  </script>
+</body>
+</html>

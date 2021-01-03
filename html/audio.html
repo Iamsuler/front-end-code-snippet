@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <audio id="audio" src="https://img-cdn-qiniu.dcloud.net.cn/uniapp/audio/music.mp3" autoplay loop controls></audio>
+  <button id="play">播放</button>
+  <script>
+    window.onload = function () {
+      document.getElementById('play').onclick = () => {
+        document.getElementById('audio').play()
+      }
+    }
+  </script>
+</body>
+</html>

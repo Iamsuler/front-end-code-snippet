@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.2.0/build/g6.js"></script>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    const data = {
+      nodes: [{
+        id: '0',
+        label: '0'
+      }, {
+        id: '1',
+        label: '1'
+      }, {
+        id: '2',
+        label: '2'
+      }],
+      edges: [{
+        source: '0',
+        target: '1'
+      }, {
+        source: '1',
+        target: '2'
+      }]
+    };
+
+    const width = document.getElementById('container').scrollWidth;
+    const height = document.getElementById('container').scrollHeight || 500;
+    const graph = new G6.Graph({
+      container: 'container',
+      width,
+      height,
+      modes: {
+        default: [ 'zoom-canvas', 'drag-canvas', 'drag-node' ]
+      },
+      layout: {
+        type: 'grid',
+        begin: [ 20, 20 ],
+        width: width - 20,
+        height: height - 20
+      },
+      animate: true,
+      defaultNode: {
+        size: 20,
+        style: {
+          fill: '#C6E5FF',
+          stroke: '#5B8FF9'
+        }
+      },
+      defaultEdge: {
+        size: 1,
+        color: '#e2e2e2'
+      }
+    });
+    graph.data(data);
+    graph.render();
+  </script>
+</body>
+</html>

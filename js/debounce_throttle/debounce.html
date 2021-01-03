@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>debounce</title>
+</head>
+<body>
+  <div id="wrap"></div>
+  <script>
+    function initHtml (length = 100) {
+      let html = '<ul>'
+      for (let index = 0; index < length; index++) {
+        html += `<li>这是待做事项${index}</li>`
+      }
+      html += '</ul>'
+      document.getElementById('wrap').innerHTML = html
+    }
+    initHtml(120)
+
+    
+    let debounce = (fn, delayTime) => {
+      let timer = null;
+      return function () {
+        let context = this, args = arguments;
+        timer && clearTimeout(timer)
+        timer = setTimeout(() => {
+          fn.apply(context, args)
+        }, delayTime)
+      }
+    }
+
+    function handle () {
+      console.log(new Date())
+    }
+
+    window.addEventListener('scroll', debounce(handle, 1000));
+  </script>
+</body>
+</html>

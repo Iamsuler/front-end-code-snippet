@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="insert">insert</button>
+  <button id="remove">remove</button>
+  <ul id="list"></ul>
+  <script>
+    let list = document.getElementById('list')
+    function insert () {
+      for (let index = 0; index < 1000; index++) {
+        let li = document.createElement('li')
+        li.innerText = index
+        list.appendChild(li)
+      }
+    }
+    function remove () {
+      list.remove()
+      // list = null
+    }
+    document.getElementById('insert').onclick = insert
+    document.getElementById('remove').onclick = remove
+  </script>
+</body>
+</html>

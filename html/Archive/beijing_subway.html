@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Qunee for HTML5 - 北京地铁图</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+<body style="margin: 0px">
+<div style="position: absolute; width: 100%; top: 0px; bottom: 0px;" id="canvas"></div>
+<script src="http://demo.qunee.com/lib/qunee-min.js"></script>
+<script>
+    var defaultFontSize = 12;
+    Q.DefaultStyles[Q.Styles.LABEL_FONT_SIZE] = defaultFontSize;
+    var graph = new Q.Graph('canvas');
+    graph.originAtCenter = false;
+
+    graph.onPropertyChange('scale', function(evt){
+        var scale = evt.value;
+        scale = 1 + (scale - 1) * 0.5;
+        graph.forEach(function(element){
+            element.setStyle(Q.Styles.LABEL_FONT_SIZE, defaultFontSize / scale);
+        })
+    })
+
+    function loadSubwayData(){
+        //数据来源：http://www.bjsubway.com/subwaymap/station_map.html
+        var lineUrl = './beijing.xml';
+
+        var lines = {};
+        var stations = {};
+        function xml2JSON(xmlElement){
+            var object = {};
+            var attributes = xmlElement.attributes;
+            var i = 0, l = attributes.length;
+            while(i < l){
+                var a = attributes[i];
+                var v = a.value;
+                try{
+                    v = JSON.parse(v);
+                }catch(e){
+                }
+                object[a.name] = v;
+                i++;
+            }
+            return object;
+        }
+
+        var circle = Q.Shapes.getShape(Q.Consts.SHAPE_CIRCLE, 10, 10);
+        function createStation(p){
+            var id = p.sid;
+            if(id in stations){
+                var node = stations[id];
+                node.size = {
+                    width: node.size.width + 4
+                }
+                return node;
+            }
+            var name = '' + p.lb;
+            if(!name){
+                return;
+            }
+            var node = graph.createNode(name, p.x, p.y);
+            node.image = circle;
+            node.size = {width: 12};
+            node.zIndex = 10;
+            node.setStyle(Q.Styles.SHAPE_FILL_COLOR, '#FFF');
+            node.setStyle(Q.Styles.SHAPE_STROKE_STYLE, '#555');
+            var size = {width: name.length * defaultFontSize, height: defaultFontSize * 1.2};
+            node.setStyle(Q.Styles.LABEL_ANCHOR_POSITION, Q.Position.CENTER_MIDDLE);
+            node.setStyle(Q.Styles.LABEL_POSITION, Q.Position.CENTER_MIDDLE);
+            node.setStyle(Q.Styles.LABEL_OFFSET_X, p.rx + size.width / 2);
+            node.setStyle(Q.Styles.LABEL_OFFSET_Y, p.ry + size.height / 2);
+            stations[id] = node;
+            return node;
+        }
+
+        function createLabel(name, x, y, backgroundColor){
+            var label = graph.createText(name, x, y);
+            label.setStyle(Q.Styles.LABEL_COLOR, '#FFF');
+            label.anchorPosition = {x:0, y: 0}
+            label.setStyle(Q.Styles.LABEL_BACKGROUND_COLOR, backgroundColor);
+            label.setStyle(Q.Styles.LABEL_RADIUS, 0);
+            label.setStyle(Q.Styles.LABEL_PADDING, 3);
+            return label;
+        }
+
+        function createLine(line){
+//        <l lid="地铁1号线" lb="1号线" i="1" slb="1,1" lp="197,756,70,20;1304,824,70,20" n="23" loop="false" lbx="997" lby="840" lbr="0.0" lc="0xC23A30" lnub="0">
+//        <p n="0" sid="苹果园" lb="苹果园" x="280" y="760" rx="-20" ry="-26" st="true" ex="false" iu="true" rc="false" slb="true" ln="北京市|地铁1号线" int="5" arr="0" ut="220" dt="0" us="0" ds="0" ud="2.606" dd="0"/>
+
+            var lineObject = xml2JSON(line);
+            var color = Q.toColor(lineObject.lc);
+            var name = lineObject.lid;
+            var loop = lineObject.loop;
+
+            var points = line.getElementsByTagName('p');
+
+            var path = new Q.Path();
+            var arcInfo;
+            Q.forEach(points, function(p, index){
+                p = xml2JSON(p);
+                if(index == 0){
+                    path.moveTo(p.x, p.y);
+                }else{
+                    if(!arcInfo){
+                        path.lineTo(p.x, p.y);
+                    }else{
+                        arcInfo = arcInfo.split(':');
+                        var ax = parseFloat(arcInfo[0]), ay = parseFloat(arcInfo[1]);
+                        path.quadTo(ax, ay, p.x, p.y);
+                    }
+                }
+                createStation(p);
+                arcInfo = p.arc;
+            })
+            if(loop){
+                path.closePath();
+            }
+
+            var lineNode = graph.createShapeNode(path);
+            lineNode.setStyle(Q.Styles.SHAPE_FILL_COLOR, null);
+            lineNode.setStyle(Q.Styles.SHAPE_FILL_GRADIENT, null);
+            lineNode.setStyle(Q.Styles.SHAPE_STROKE, 6);
+            lineNode.setStyle(Q.Styles.SHAPE_STROKE_STYLE, color);
+            lines[lineObject.lid] = lineNode;
+
+//            lp="197,756,70,20;1304,824,70,20"
+            if(lineObject.lp){
+                var lp = lineObject.lp.split(';');
+                lp.forEach(function(p){
+                    p = p.trim();
+                    if(!p){
+                        return;
+                    }
+                    p = p.split(',');
+                    var label = createLabel(name, parseFloat(p[0]), parseFloat(p[1]), color);
+                    lineNode.addFollower(label);
+                })
+            }
+        }
+
+        Q.loadXML(lineUrl, function(xml){
+            Q.forEach(xml.getElementsByTagName("l"), createLine);
+            graph.zoomToOverview()
+        })
+    }
+    loadSubwayData();
+</script>
+</body>
+</html>

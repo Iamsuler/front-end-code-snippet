@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>class jQuery</title>
+  <script>
+    class jQuery {
+      constructor (selector) {
+        let slice = Array.prototype.slice;
+        let dom = slice.call(document.querySelectorAll(selector));
+        let len = dom ? dom.length : 0;
+        for (let i = 0; i < len; i++) {
+          this[i] = dom[i]
+        }
+        this.length = len;
+        this.selector = selector || ''
+      }
+      append (node) {
+        console.log(this)
+      }
+      html (data) {
+        let doms = Array.prototype.slice.call(this);
+        let html = ''
+        console.log(doms)
+        if (data) {
+          doms.forEach(element => {
+            element.innerHTML = data
+          });
+        } else {
+          doms.forEach(element => {
+            html += element.innerHTML
+          })
+          return html
+        }
+      }
+    }
+    window.$ = function (selector) {
+      return new jQuery(selector)
+    }
+  </script>
+</head>
+<body>
+  <ul class="news-list">
+    <li class="news-item"><a href="#">this is news item.</a></li>
+    <li class="news-item"><a href="#">this is news item.</a></li>
+    <li class="news-item"><a href="#">this is news item.</a></li>
+    <li class="news-item"><a href="#">this is news item.</a></li>
+    <li class="news-item"><a href="#">this is news item.</a></li>
+    <li class="news-item"><a href="#">this is news item.</a></li>
+    <li class="news-item"><a href="#">this is news item.</a></li>
+    <li class="news-item"><a href="#">this is news item.</a></li>
+  </ul>
+  <script>
+    $('.news-item').html('this is news item 3')
+  </script>
+</body>
+</html>

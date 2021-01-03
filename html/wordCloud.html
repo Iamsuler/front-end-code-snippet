@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link type="text/css" rel="stylesheet" href="http://www.huimg.cn/hudong/entry/widget/docloud/css/docloud170421.css"/>
+    <script src="https://i1.liuxue86.com/js/jquery.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        var lists="35 唐太宗,18 李建成,18 李元霸,15 房玄龄,15  魏征[唐朝政治家],15  李虎,15  唐高祖,15  唐高宗,10 武则天,10  李元吉,10  长孙皇后,10  长孙无忌,10  王逸竹,10  唐朝,10  昭陵,10  世界名人,10  中国历史名人,7 中国君主,7  书法家,7  人文领域人物,7  人物,7  军事家,7  历代皇帝,7  历史人物,7  各国热点人物,5 名人,5  君主,5  唐朝皇帝,5  成功人士,5  政治家,4 知名人物,4  著名人物,4  诗人,4  君王,4  皇帝,4  贞观之治,4  开元盛世,4  玄武门之变,4  李渊,4  突厥,3 松赞干布,3  相面,3  骑射,3  长安,3  秦国公,3  宋金刚,3  徐圆朗,3  杜如晦,3  秦叔宝,3  尉迟敬德,3  段志玄,3  侯君集,3  陈叔达,3  李靖,3  徐世勣,3  宇文士及,3  薜延陀,3  李承乾,3  李治,3  隋朝,3  贞观长歌,3  唐国强,3  东罗马帝国,3  政绩,3  贪污,3  洪州,3  扬州,3  益州,3  氏族志,3  夏州,3  薛万彻,3  单于,3  南昌,3  沙州,3  凉州,3  丝稠之路,3  幽州,3  西域,3  文成公主,3  大唐西域记,3  临川公主,3  李嚣,3  郑贤妃,3  阴妃,3  阴嫔,3  韦昭容,3  萧美人,3  崔才人,3  萧才人,3  李智云,3  郧乡县,3  襄城公主,3  姜简,3  汝南公主,3  遂安公主,3  窦逵,3  王大礼,3  长孙冲,3  北景公主,3  晋安公主,3  合浦公主,3  金山公主,3  常山公主,3  韦正矩,3  起居注,3  实录,3  形势,3  非常,3  高句丽,3  加役流,3  辟罪,3  乔师望,3  鼓纛,3  谢元深,3  恶阳岭,3  侍臣论,3  流鬼国,3  唐蕃和亲,3  席君买,3  骨利干,3  车鼻可汗,3  剑桥中国隋唐史,3  西游记,3  隋唐演义,3  大唐双龙传,3  黄海冰,3  焦恩俊,3  潘志文,3  濮存昕,3  樊少皇,3  郑国霖,3  何润东,3  林志颖,3  余少群,3  杜淳";
+        var arr_lists = lists.split(',');
+        console.log(arr_lists)
+        for (const key in arr_lists) {
+            console.log(key)
+        }
+    </script>
+    <div class="docloud">
+        <div class="docloud-title"><strong>词云</strong></div>
+        <div class="docloud-con">
+            <p class="span12" id="canvas-container"/>
+            <canvas id="canvas" class="canvas"></canvas>
+        </div>
+    </div>
+    <!-- JS -->
+    <script defer src="http://www.huimg.cn/hudong/entry/widget/docloud/js/wordcloud2.js"></script>
+    <script defer src="http://www.huimg.cn/hudong/entry/widget/docloud/js/docloud.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background: whiteSmoke;
+            font-family: sans-serif;
+            margin: 30px;
+        }
+        #transcription,
+        #pic {
+            background: white;
+            display: inline-block;
+            border: 1px solid #ddd;
+            margin: 10px;
+        }
+        #transcription {
+            font-size: 30px;
+            padding: 30px;
+            min-width: 300px;
+            color: gray;
+        }
+
+        #transcription.done {
+            color: black;
+        }
+        #main {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Simple Ocrad.js Example</h1>
+    <img src="https://img.liuxue86.com/ueditor/201712/12/9167ebc823ab16c54c8ced4877477b0b.jpg" />
+    <!-- <div id="transcription"></div> -->
+    <!-- <script src="js/ocrad.js"></script>
+    <script>
+        function  recognize_image() {
+            document.getElementById('transcription').innerText  =  "(Recognizing...)"
+            console.log('Recognizing...')
+            OCRAD(document.getElementById("pic"),  function (text) {
+                document.getElementById('transcription').className  =  "done"
+                document.getElementById('transcription').innerText  =  text;
+            })
+        }
+    </script> -->
+</body>
+
+</html>

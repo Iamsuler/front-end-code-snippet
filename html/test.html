@@ -1,0 +1,144 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+ <meta charset="utf-8"> 
+ <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+ <meta name="viewport" content="width=device-width, initial-scale=1"> 
+ <title>HTML5 刮刮卡</title> 
+ <link rel="stylesheet" type="text/css" href="" /> 
+ <style type="text/css"> 
+ .demo{width:320px; margin:10px auto 20px auto; min-height:300px;} 
+ .msg{text-align:center; height:32px; line-height:32px; font-weight:bold; margin-top:50px} 
+ </style> 
+</head> 
+  
+<body> 
+ <div id="main"> 
+  <h2 align="center">HTML5 刮刮卡(支持手机)</a></h2> 
+  <div class="msg">刮开灰色部分看看，<a href="javascript:void(0)" onClick="window.location.reload()">再来一次</a></div> 
+  <div class="demo"> 
+   <canvas id="canvasBotm"></canvas> 
+   <canvas id="canvasTop"></canvas> 
+     
+  </div> 
+ </div> 
+  
+<script type="text/javascript"> 
+  
+ //生成随机数据。n表示位数 
+ var jschars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
+ function generateMixed(n) { 
+  var res = ""; 
+  for(var i = 0; i < n ; i ++) { 
+   var id = Math.ceil(Math.random()*61); 
+   res += jschars[id]; 
+  } 
+  //alert(res); 
+  return res; 
+ }      
+   
+ //禁用页面的鼠标选中拖动的事件 
+ var bodyStyle = document.body.style; 
+ bodyStyle.mozUserSelect = 'none'; 
+ bodyStyle.webkitUserSelect = 'none'; 
+  
+ //定义图片类，获取canvas元素，并设置背景和位置属性 
+ var img = new Image(); 
+ var canvas = document.getElementById('canvasTop'); 
+ var canvasBotm = document.getElementById('canvasBotm'); 
+ canvas.style.backgroundColor='transparent'; 
+ canvas.style.position = 'absolute'; 
+ canvasBotm.style.backgroundColor='#f3f3f3'; //验证码背景色 
+ canvasBotm.style.position = 'absolute'; 
+   
+ var imgs = ['https://i1.liuxue86.com/images/weixin/copy_pay_qrcode.jpg','https://i1.liuxue86.com/images/weixin/copy_pay_qrcode.jpg']; 
+ var num = Math.floor(Math.random()*2); 
+ img.src = imgs[num]; 
+   
+ img.addEventListener('load', function(e) { 
+  var ctx; 
+  var w = img.width, 
+   h = img.height; 
+  var offsetX = canvas.offsetLeft, 
+   offsetY = canvas.offsetTop; 
+  var mousedown = false; 
+  //函数layer()用来绘制一个灰色的正方形 
+  function layer(ctx) { 
+   ctx.fillStyle = 'grey'; 
+   ctx.fillRect(0, 0, w, h); 
+  } 
+  function layerBotm(ctxBotm) { 
+   ctxBotm.fillStyle = 'grey'; 
+   ctxBotm.fillRect(0, 0, w, h); 
+  } 
+  //定义了按下事件 
+  function eventDown(e){ 
+   e.preventDefault(); 
+   mousedown=true; 
+  } 
+  //定义了松开事件 
+  function eventUp(e){ 
+   e.preventDefault(); 
+   mousedown=false; 
+  } 
+  //定义了移动事件 
+  function eventMove(e){ 
+   e.preventDefault(); 
+   if(mousedown) {     //当按下时，获取坐标位移，并通过arc(x, y, 10, 0, Math.PI * 2)来绘制小圆点 
+     if(e.changedTouches){ 
+      e=e.changedTouches[e.changedTouches.length-1]; 
+     } 
+     var x = (e.clientX + document.body.scrollLeft || e.pageX) - offsetX || 0, 
+      y = (e.clientY + document.body.scrollTop || e.pageY) - offsetY || 0; 
+     with(ctx) { 
+      beginPath() 
+      arc(x, y, 20, 0, Math.PI * 2); 
+      fill(); 
+     } 
+   } 
+  } 
+    
+  //通过canvas调用以上函数，绘制图形，并且侦听触控及鼠标事件，调用相应的函数 
+  canvas.width=w; 
+  canvas.height=h; 
+  canvasBotm.width=w; 
+  canvasBotm.height=h; 
+  //canvas.style.backgroundImage='url('+img.src+')'; 
+  //canvas.style.backgroundColor='#f3f3f3'; 
+    
+  ctxBotm=canvas.getContext("2d"); 
+  ctx=canvasBotm.getContext("2d"); 
+  ctx.font="50px Arial"; 
+  
+  // 创建渐变 
+  var gradient=ctx.createLinearGradient(0,0,canvas.width,0); 
+  gradient.addColorStop("0","magenta"); 
+  gradient.addColorStop("0.5","blue"); 
+  gradient.addColorStop("1.0","red"); 
+    
+  //实习字体 
+  ctx.fillStyle=gradient; 
+  ctx.fillText(generateMixed(8),40,90);  
+  //空心字体 
+  ctx.strokeStyle=gradient; 
+  ctx.strokeText(generateMixed(8),40,90); 
+    
+  ctx=canvas.getContext('2d'); 
+  ctx.fillStyle='transparent'; 
+  ctx.fillRect(0, 0, w, h); 
+  
+  layerBotm(ctxBotm); 
+  layer(ctx); 
+  
+  ctx.globalCompositeOperation = 'destination-out'; 
+  
+  canvas.addEventListener('touchstart', eventDown); 
+  canvas.addEventListener('touchend', eventUp); 
+  canvas.addEventListener('touchmove', eventMove); 
+  canvas.addEventListener('mousedown', eventDown); 
+  canvas.addEventListener('mouseup', eventUp); 
+  canvas.addEventListener('mousemove', eventMove); 
+ }); 
+</script> 
+</body> 
+</html> 

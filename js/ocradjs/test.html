@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>a simple</h1>
+    <div id="main">
+        <img id="picture" src="images/338b1c226a4ec0fdfe5109f3b4b4d16c.jpg" alt="">
+        <div id="transcription"></div>
+    </div>
+    <script src="js/ocrad.js"></script>
+    <script>
+        window.onload = function () {
+            document.getElementById('transcription').innerText  =  "(Recognizing...)"
+            console.log('Recognizing...')
+            OCRAD(document.getElementById("picture"),  function (text) {
+                document.getElementById('transcription').className  =  "done"
+                document.getElementById('transcription').innerText  =  text;
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>图片放大缩小</title>
+ </head>
+ <body >
+ <div id="mov"
+      onmousewheel="return bigimg(this)"
+      onmousedown="mouseDown(this,event)" onmousemove="mouseMove(this,event)" onmouseup="mouseUp(event)"
+      style=" transition: all .5s; -webkit-transition: all .5s;  position: absolute">
+  <img src="https://img.liuxue86.com/ueditor/201712/12/03b17c9d8012ecceec31e16234681316.jpg">
+ </div>
+ </body>
+ <script>
+   function bigimg(obj){
+     let zoom = parseInt(obj.style.zoom,10)||100;
+     zoom += event.wheelDelta / 15;
+     if(zoom > 0 )
+       obj.style.zoom=zoom+'%';
+     // return false;
+   }
+
+   let mouseX, mouseY;
+   let objX, objY;
+   let isDowm = false;
+   function mouseDown(obj, e) {
+     console.log(obj, e)
+     event.preventDefault();
+     event.stopPropagation();
+     obj.style.cursor = "move";
+     objX = obj.offsetLeft;
+     objY = obj.offsetTop;
+     mouseX = e.clientX;
+     mouseY = e.clientY;
+     isDowm = true;
+   }
+   function mouseMove(obj,e) {
+     let x = e.clientX;
+     let y = e.clientY;
+     if (isDowm) {
+       obj.style.left = parseInt(objX) + parseInt(x) - parseInt(mouseX) + "px";
+       obj.style.top = parseInt(objY) + parseInt(y) - parseInt(mouseY) + "px";
+     }
+   }
+   function mouseUp(e) {
+     if (isDowm) {
+       console.log('鼠标抬起')
+       let x = e.clientX;
+       let y = e.clientY;
+       let div = document.getElementById("mov");
+       div.style.left = parseInt(objX) + parseInt(x) - parseInt(mouseX) + "px";
+       div.style.top = parseInt(objY) + parseInt(y) - parseInt(mouseY) + "px";
+       div.style.cursor = "default";
+       isDowm = false;
+     }
+   }
+ </script>
+</html>

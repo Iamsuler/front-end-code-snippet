@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #mycanvas {
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="mycanvas"></canvas>
+  <script>
+    var canvas = document.getElementById('mycanvas');
+    var context = canvas.getContext("2d");
+    // context.fillStyle = "#d1d1d1";
+    // context.fillRect(0, 0, 240, 65);
+    var img = new Image();
+    img.src = 'https://i1.liuxue86.com/images/liuxue-2.1/logo-2.1.png'
+    context.drawImage(img, 0, 0);
+  </script>
+</body>
+</html>

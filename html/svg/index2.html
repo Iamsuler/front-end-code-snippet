@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <svg id="svg" width="1200" height="4000" viewBox="0 0 1200 4000"></svg>
+  <script>
+    let html = ''
+    let x = 0
+    let y = 0
+    for (let index = 0; index < 1000; index++) {
+      // html += `<use xlink:href="#shenle" x="${index * 100}" y="${index * 100}" />`
+      if (x === 24) {
+        x = 0
+        y++
+      }
+      html += `<image
+        id="shenle"
+        width="50" height="50"
+        x="${x * 50}"
+        y="${y * 50 }"
+        xlink:href="./shenle.jpg"/>`
+      x++
+    }
+    // $('#svg').append(html)
+    document.getElementById('svg').innerHTML = html
+  </script>
+</body>
+</html>

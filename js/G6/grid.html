@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.2.0/build/g6.js"></script>
+  <style>
+    .wrap {
+      display: flex;
+    }
+    #container {
+      width: 1000px;
+    }
+    .side {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="container"></div>
+    <div class="side">
+      <div>
+          <span>node</span>
+          <input type="text" id="node-id">
+          <input type="text" id="node-input">
+          <button id="node-button">submit</button>
+      </div>
+      <p style="height: 40px;"></p>
+      <div>
+          <div>
+            <span>node</span>
+            <select name="" id="edge-select">
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+            <button id="edge-button">submit</button>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let thisType = ''
+    let thisId = ''
+    let thisEdgeId = ''
+    let thisEdgeType = ''
+    /**
+    * 该示例演示自定义边和节点实现资金流转图效果
+    * by 十吾
+    */
+    const colorMap = {
+      A: '#999',
+      B: '#0f0',
+      C: '#f00'
+    };
+    let data = {
+      nodes: [{
+        id: '1',
+        name: '公司1'
+      }, {
+        id: '2',
+        name: '公司2'
+      }, {
+        id: '3',
+        name: '公司3'
+      }, {
+        id: '4',
+        name: '公司4'
+      }, {
+        id: '5',
+        name: '公司5'
+      }, {
+        id: '6',
+        name: '公司6'
+      }, {
+        id: '7',
+        name: '公司7'
+      }, {
+        id: '8',
+        name: '公司8'
+      }, {
+        id: '9',
+        name: '公司9'
+      }],
+      edges: [{
+        source: '1',
+        target: '2',
+        data: {
+          type: 'A',
+          amount: '100,000 元',
+          date: '2019-08-03'
+        }
+      }, {
+        source: '1',
+        target: '3',
+        data: {
+          type: 'B',
+          amount: '100,000 元',
+          date: '2019-08-03'
+        }
+      }, {
+        source: '2',
+        target: '5',
+        data: {
+          type: 'C',
+          amount: '100,000 元',
+          date: '2019-08-03'
+        }
+      }, {
+        source: '5',
+        target: '6',
+        data: {
+          type: 'B',
+          amount: '100,000 元',
+          date: '2019-08-03'
+        }
+      }, {
+        source: '3',
+        target: '4',
+        data: {
+          type: 'C',
+          amount: '100,000 元',
+          date: '2019-08-03'
+        }
+      }, {
+        source: '4',
+        target: '7',
+        data: {
+          type: 'B',
+          amount: '100,000 元',
+          date: '2019-08-03'
+        }
+      }, {
+        source: '1',
+        target: '8',
+        data: {
+          type: 'B',
+          amount: '100,000 元',
+          date: '2019-08-03'
+        }
+      }, {
+        source: '1',
+        target: '9',
+        data: {
+          type: 'C',
+          amount: '100,000 元',
+          date: '2019-08-03'
+        }
+      }]
+    };
+
+    G6.registerNode('round-rect', {
+      draw: function draw(cfg, group) {
+        const width = cfg.style.width;
+        const stroke = cfg.style.stroke;
+        const rect = group.addShape('rect', {
+          attrs: {
+            x: -width / 2,
+            y: 0,
+            width,
+            height: 70,
+            stroke,
+            lineWidth: 1.2,
+            fillOpacity: 1
+          }
+        });
+        group.addShape('image', {
+          attrs: {
+            x: width / 2 - 40,
+            y: 19,
+            width: 32,
+            height: 32,
+            img: 'images/add1.png',
+            cursor: "pointer",
+            actionType: 'add'
+          }
+        });
+        group.addShape('image', {
+          attrs: {
+            x: width / 2 - 80,
+            y: 19,
+            width: 32,
+            height: 32,
+            img: 'images/edit.png',
+            cursor: "pointer",
+            actionType: 'edit'
+          }
+        });
+        group.addShape('text', {
+          attrs: {
+            text: cfg.name,
+            x: 0,
+            y: 0,
+            fill: '#00287E',
+            fontSize: 14,
+            textAlign: 'center',
+            textBaseline: 'middle',
+            fontWeight: 'bold'
+          }
+        });
+        return rect;
+      },
+      getAnchorPoints: function getAnchorPoints() {
+        return [[ 0, 0.5 ], [ 1, 0.5 ]];
+      },
+      update: function update(cfg, item) {
+        const group = item.getContainer();
+        const children = group.get('children');
+        const text = children[3]
+        const name = cfg.name;
+
+        if (name) {
+          text.attr('text', name)
+        }
+      }
+    }, 'single-shape');
+
+    G6.registerEdge('polyline', {
+      itemType: 'edge',
+      draw: function draw(cfg, group) {
+        const startPoint = cfg.startPoint;
+        const endPoint = cfg.endPoint;
+
+        const Ydiff = endPoint.y - startPoint.y;
+
+        const slope = Ydiff !== 0 ? 500 / Math.abs(Ydiff) : 0;
+
+        const cpOffset = 16;
+        const offset = Ydiff < 0 ? cpOffset : -cpOffset;
+
+        const line1EndPoint = {
+          x: startPoint.x + slope,
+          y: endPoint.y + offset
+        };
+        const line2StartPoint = {
+          x: line1EndPoint.x + cpOffset,
+          y: endPoint.y
+        };
+
+        // 控制点坐标
+        const controlPoint = {
+          x: (line1EndPoint.x - startPoint.x) * (endPoint.y - startPoint.y) / (line1EndPoint.y - startPoint.y) + startPoint.x,
+          y: endPoint.y
+        };
+
+        let path = [[ 'M', startPoint.x, startPoint.y ], [ 'L', line1EndPoint.x, line1EndPoint.y ], [ 'Q', controlPoint.x, controlPoint.y, line2StartPoint.x, line2StartPoint.y ], [ 'L', endPoint.x, endPoint.y ]];
+
+        if (Ydiff === 0) {
+          path = [[ 'M', startPoint.x, startPoint.y ], [ 'L', endPoint.x, endPoint.y ]];
+        }
+
+        const lineWidth = cfg.style.lineWidth
+        const line = group.addShape('path', {
+          attrs: {
+            path,
+            stroke: colorMap[cfg.data && cfg.data.type],
+            lineWidth: lineWidth,
+            cursor: "pointer",
+            endArrow: false
+          }
+        });
+        return line;
+      }
+    });
+
+    const width = 1000;
+    const height = 500;
+    const graph = new G6.Graph({
+      container: 'container',
+      renderer: 'svg',
+      width,
+      height,
+      fitView: true,
+      layout: {
+        type: 'grid',
+        begin: [ 20, 20 ],
+        width: 250,
+        height: 100
+      },
+      modes: {
+        default: [ 'drag-canvas', 'zoom-canvas' ]
+      },
+      defaultNode: {
+        shape: 'round-rect',
+        style: {
+          stroke: '#72CC4A',
+          width: 200
+        }
+      },
+      defaultEdge: {
+        shape: 'polyline',
+        style: {
+          lineWidth: 2
+        }
+      },
+      nodeStateStyles: {
+        hover: {
+          fill: '#f00',
+        }
+      },
+      edgeStateStyles: {
+        hover: {
+          lineWidth: 5
+        }
+      }
+    });
+
+    graph.data(data);
+    graph.render();
+
+    // 监听鼠标点击节点
+    graph.on('edge:click', evt => {
+      console.log('edge', evt)
+      const item = evt.item;
+      const { model, id } = item._cfg
+      thisEdgeType = model.data.type
+      thisEdgeId = id
+      edgeSelect.value = thisEdgeType
+    });
+    graph.on('edge:mouseenter', function(evt) {
+      console.log('edge:mouseenter')
+      const edge = evt.item;
+      const model = edge.getModel();
+      graph.setItemState(edge, 'hover', true);
+    });
+    // 节点上的点击事件
+    graph.on('node:click', function(event) {
+      console.log(event)
+      const { item } = event;
+      const shape = event.target;
+      const { actionType } = shape._attrs
+      // graph.setItemState(item, 'hover', true);
+      if (actionType) {
+        thisId = item._cfg.id
+        thisType = actionType
+        if (actionType === 'edit') {
+          const item = graph.findById(thisId)
+          const { model } = item._cfg
+          // console.log(item)
+          nodeInput.value = model.name
+          nodeId.value = model.id
+        }
+      }
+    });
+
+    // const edges = graph.getEdges();
+    // edges.forEach(function(edge) {
+    //   const line = edge.getKeyShape();
+    //   const stroke = line.attr('stroke');
+    //   const targetNode = edge.getTarget();
+    //   targetNode.update({
+    //     style: {
+    //       stroke
+    //     }
+    //   });
+    // });
+    // graph.paint();
+
+    var nodeButton = document.getElementById('node-button')
+    var nodeInput = document.getElementById('node-input')
+    var nodeId = document.getElementById('node-id')
+    nodeButton.onclick = function () {
+      console.log(thisType)
+      if (thisType === 'add') {
+        data.nodes.push({
+          id: nodeId.value,
+          label: nodeInput.value
+        })
+        data.edges.push({
+          source: thisId,
+          target: nodeId.value,
+          data: {
+            type: 'C',
+            amount: '100,000 元',
+            date: '2019-08-03'
+          }
+        })
+        graph.changeData(data)
+        graph.paint()
+      } else if (thisType === 'edit') {
+        const item = graph.findById(thisId)
+        let model = {
+          id: nodeId.value,
+          name: nodeInput.value
+        }
+        // console.log(data)
+        console.log(thisId, item)
+        graph.updateItem(item, model)
+        // graph.refresh()
+        // graph.changeData(data)
+        // graph.paint()
+      }
+    }
+    
+    var edgeSelect = document.getElementById('edge-select')
+    var edgeButton = document.getElementById('edge-button')
+    edgeButton.onclick = function () {
+      const edge = graph.findById(thisEdgeId)
+      let model = {
+        data: {
+          type: edgeSelect.value
+        }
+      }
+      graph.updateItem(edge, model)
+    }
+  </script>
+</body>
+</html>

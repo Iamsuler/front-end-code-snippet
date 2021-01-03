@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>defineProperty</title>
+</head>
+<body>
+  <div>
+    <input type="text" id="userName">
+    <input type="text" id="userNameTo">
+    <button type="button" id="clickBtn">click</button>
+  </div>
+  <script>
+    var userName = document.getElementById('userName')
+    var userNameTo = document.getElementById('userNameTo')
+
+    var model = Object.create(null)
+
+    Object.defineProperty(model, 'name', {
+      get: () => {
+        console.log('get is exec')
+        return name
+      },
+      set: (value) => {
+        console.log('set is exec')
+        userNameTo.value = value
+        name = value
+      }
+    })
+
+    userName.addEventListener('blur', () => {
+      model.name = userName.value
+    })
+
+    document.getElementById('clickBtn').addEventListener('click', () => {
+      model.name = 'I\'m jack'
+    })
+  </script>
+</body>
+</html>

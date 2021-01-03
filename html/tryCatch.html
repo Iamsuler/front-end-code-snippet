@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>try catch</title>
+</head>
+<body>
+  <script>
+    const plus1 = () => 1
+    const plus2 = () => { throw 1 }
+    
+    console.time('sum')
+    let sum = 0
+    for (let index = 0; index < 10000; index++) {
+      try {
+        sum += plus1()
+        // sum += plus2()
+      } catch (error) {
+        sum += error
+      }
+    }
+    console.timeEnd('sum')
+  </script>
+</body>
+</html>

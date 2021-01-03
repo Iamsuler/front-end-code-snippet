@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>svg</title>
+  <!-- <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script> -->
+</head>
+<body>
+  <svg id="svg" width="1200" height="4000" viewBox="0 0 1200 4000">
+    <defs>
+      <g id="shenle">
+        <image width="50" height="50" xlink:href="./shenle.jpg"/>
+      </g>
+    </defs>
+    <use xlink:href="#shenle" x="0" y="0"></use>
+  </svg>
+  <script>
+    let html = ''
+    let x = 0
+    let y = 0
+    let fragment = document.createDocumentFragment()
+    for (let index = 0; index < 1000; index++) {
+      // html += `<use xlink:href="#shenle" x="${index * 100}" y="${index * 100}" />`
+      if (x === 24) {
+        x = 0
+        y++
+      }
+      let use = document.createElementNS('http://www.w3.org/2000/svg', 'use')
+      use.setAttribute('xlink:href', '#shenle')
+      use.setAttribute('x', x * 50)
+      use.setAttribute('y', y * 50)
+      fragment.appendChild(use)
+      x++
+    }
+    // $('#svg').append(html)
+    document.getElementById('svg').appendChild(fragment)
+  </script>
+</body>
+</html>

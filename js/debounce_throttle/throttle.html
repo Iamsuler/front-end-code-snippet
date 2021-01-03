@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>throttle</title>
+</head>
+<body>
+  <div id="wrap"></div>
+  <script>
+    function initHtml (length = 100) {
+      let html = '<ul>'
+      for (let index = 0; index < length; index++) {
+        html += `<li>这是待做事项${index}</li>`
+      }
+      html += '</ul>'
+      document.getElementById('wrap').innerHTML = html
+    }
+    initHtml(120)
+
+    // use timestamp
+    // let throttle = (fn, delayTime) => {
+    //   let start = Date.now()
+    //   return function () {
+    //     let now = Date.now(), context = this, args = arguments;
+    //     if (now - start >= delayTime) {
+    //       fn.apply(context, args)
+    //       start = Date.now()
+    //     }
+    //   }
+    // }
+
+    // use timeout
+    let throttle = (fn, delayTime) => {
+      let flag = false;
+      return function () {
+        let context = this, args = arguments;
+        if (!flag) {
+          flag = setTimeout(() => {
+            fn.apply(context, args)
+            flag = false
+          }, delayTime)
+        }
+      }
+    }
+
+    function handle () {
+      console.log(Date.now())
+    }
+
+    window.addEventListener('scroll', throttle(handle, 10000))
+  </script>
+</body>
+</html>

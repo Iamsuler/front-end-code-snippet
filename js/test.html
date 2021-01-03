@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    var data = {
+      "id":"c_b12d67ead8f243ae9c0c3e1edd8ae8d4_47",
+      "inRegion":{
+        "unitName":"国网南京供电公司",
+        "unitId":"e59440e548384359acee987b47efadfd",
+        "deptName":"变电运维四班",
+        "deptId":"d308bdaaa6e6497095c53e8d158216ca",
+        "substationId":"b12d67ead8f243ae9c0c3e1edd8ae8d4",
+        "substationName":"西太湖变",
+        "voltageLevelId":"SBTZ_DYDJ_0002",
+        "voltageLevelName":"交流750kV",
+        "planStartTime":"2020-03-16T16:00:00.000Z",
+        "planEndTime":"2020-03-24T16:00:00.000Z",
+        "ptTotal":9,
+        "createUserId":"a7f8f54a61c749668990a99a61fb7348",
+        "createUserName":"李仁贵"
+      }
+    }
+
+    var data2 = {"taskStatusList":[],"substationIdList":["10ec801775ec4b9daba113a6e5cc131f"],"startTime":"2020-03-17T16:00:00.000Z","endTime":"2020-04-20T16:00:00.000Z","pageNum":1,"pageSize":20}
+
+    function isObject(obj) {
+      return Object.prototype.toString.call(obj) === '[object Object]'
+    }
+
+    function getTime (param) {
+      // var date = new Date(param)
+      if (param instanceof Date) {
+        return param.toISOString()
+      } else {
+        return param
+      }
+    }
+
+    function test(object) {
+      if (isObject(object)) {
+        for (const key in object) {
+          let element = object[key]
+          if (isObject(element) || Array.isArray(element)) {
+            test(element)
+          } else {
+            object[key] = getTime(element)
+          }
+        }
+      } else if (Array.isArray(object)) {
+        for (let index = 0; index < object.length; index++) {
+          let element = object[index];
+          if (isObject(element) || Array.isArray(element)) {
+            test(object[index])
+          } else {
+            object[index] = getTime(element)
+          }
+        }
+      }
+    }
+
+    // function test(object) {
+    //   for (const key in object) {
+    //     if (object.hasOwnProperty(key)) {
+    //       let element = object[key];
+    //       if (Array.isArray(element)) {
+    //         element.forEach(item => {
+
+    //         })
+    //       } else if (isObject(element)) {
+    //         test(element)
+    //       } else {
+    //         var date = new Date(element)
+    //         if (date instanceof Date && !isNaN(date.getTime())) {
+    //           object[key] = date.getTime()
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    // function test(param) {
+    //   if (Array.isArray(param)) {
+    //     param.forEach(item => {
+    //       test(item)
+    //     })
+    //   } else if (isObject(param)) {
+    //     for (const key in param) {
+    //       if (param.hasOwnProperty(key)) {
+    //         test(param[key])
+    //       }
+    //     }
+    //   } else {
+    //     var date = new Date(param)
+    //     if (date instanceof Date && !isNaN(date.getTime())) {
+    //       param = date.getTime()
+    //     }
+    //   }
+    // }
+    test(data)
+    console.log(data)
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #mountNode {
+      border: 1px solid #333;
+    }
+  </style>
+  <script src="g6.js"></script>
+</head>
+
+<body>
+  <img src="./images/add1.png" alt="add" draggable>
+  <div id="mountNode"></div>
+  <script>
+    /*
+ * Tamplate has default install the newest G6 && G6Plugins as
+ * https://unpkg.com/@antv/g6/build/g6.js
+ * https://unpkg.com/@antv/g6/build/plugins.js
+ * if you can not access this url above you can install By you own
+ */
+
+    /*
+     * 模版已经默认按以下链接安装了最新版 G6 和 G6Plugins
+     * https://unpkg.com/@antv/g6/build/g6.js
+     * https://unpkg.com/@antv/g6/build/plugins.js
+     * 如果你无法访问上述链接，你需要自己手动安装能访问的链接安装 G6 
+     */
+
+    const data = {
+      nodes: [{
+        id: 'node2',
+        label: 'node2'
+      }, {
+        id: 'node1',
+        label: 'node1'
+      }],
+      edges: [{
+        id: 'edge1',
+        target: 'node2',
+        source: 'node1'
+      }]
+    };
+    G6.registerNode('round-rect', {
+      draw: function draw(cfg, group) {
+        const width = cfg.style.width;
+        const stroke = cfg.style.stroke;
+        const rect = group.addShape('rect', {
+          attrs: {
+            x: -width / 2,
+            y: 0,
+            width,
+            height: 70,
+            stroke,
+            lineWidth: 1.2,
+            fillOpacity: 1,
+            fill: '#fff'
+          }
+        });
+        group.addShape('text', {
+          attrs: {
+            text: cfg.label,
+            x: -width / 2 + 40,
+            y: 35,
+            fill: '#333',
+            fontSize: 16,
+            textAlign: 'left',
+            textBaseline: 'middle',
+            fontWeight: 'bold'
+          }
+        });
+        return rect;
+      },
+      getAnchorPoints: function getAnchorPoints() {
+        return [[0, 0.5], [1, 0.5]];
+      },
+      update: function update(cfg, item) {
+        console.log('update')
+      },
+    }, 'single-shape');
+    const graph = new G6.Graph({
+      container: 'mountNode',
+      renderer: 'svg',
+      width: 500,
+      height: 500,
+      layout: {
+        type: 'dagre',
+        rankdir: 'LR',
+        nodesep: 50,
+        ranksep: 200
+      },
+      defaultNode: {
+        shape: 'round-rect',
+        style: {
+          stroke: '#72CC4A',
+          width: 100,
+          fill: '#666',
+          opacity: 1
+        }
+      },
+    });
+    graph.read(data);
+
+  </script>
+</body>
+
+</html>

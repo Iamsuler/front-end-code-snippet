@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="g6.js"></script>
+  <!-- <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet"> -->
+  <style>
+    .wrap {
+      display: flex;
+    }
+    #container {
+      width: 1000px;
+    }
+    .side {
+      flex-grow: 1;
+    }
+    .g6-tooltip {
+      border: 1px solid #e2e2e2;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #545454;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 10px 8px;
+      box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <div id="container"></div>
+  </div>
+  <script>
+    let thisType = ''
+    let thisId = ''
+    let thisEdgeId = ''
+    let thisEdgeType = ''
+    /**
+    * 该示例演示自定义边和节点实现资金流转图效果
+    * by 十吾
+    */
+    const colorMap = {
+      A: '#999',
+      B: '#0f0',
+      C: '#f00'
+    };
+    let data = {
+      nodes: [
+        {
+          id: 'node2',
+          name: '公司2'
+        },
+        {
+          id: 'node1',
+          name: '公司1'
+        },
+      ],
+      edges: [{
+        source: 'node1',
+        target: 'node2'
+      }]
+    };
+    G6.registerNode('round-rect', {
+      draw: function draw(cfg, group) {
+        const width = cfg.style.width;
+        const stroke = cfg.style.stroke;
+        const rect = group.addShape('rect', {
+          attrs: {
+            x: -width / 2,
+            y: 0,
+            width,
+            height: 70,
+            stroke,
+            lineWidth: 1.2,
+            fillOpacity: 1,
+            fill: '#fff'
+          }
+        });
+        group.addShape('text', {
+          attrs: {
+            text: cfg.name,
+            x: -width / 2 + 40,
+            y: 35,
+            fill: '#333',
+            fontSize: 16,
+            textAlign: 'left',
+            textBaseline: 'middle',
+            fontWeight: 'bold'
+          }
+        });
+        group.addShape('image', {
+          attrs: {
+            x: width / 2 - 40,
+            y: 19,
+            width: 32,
+            height: 32,
+            img: 'images/add1.png',
+            cursor: "pointer",
+            actionType: 'add'
+          }
+        });
+        group.addShape('image', {
+          attrs: {
+            x: width / 2 - 80,
+            y: 19,
+            width: 32,
+            height: 32,
+            img: 'images/edit.png',
+            cursor: "pointer",
+            actionType: 'edit'
+          }
+        });
+        return rect;
+      },
+      getAnchorPoints: function getAnchorPoints() {
+        return [[ 0, 0.5 ], [ 1, 0.5 ]];
+      },
+      update: function update(cfg, item) {
+        console.log('update')
+      },
+    }, 'single-shape');
+    const width = 1000;
+    const height = 500;
+    const graph = new G6.Graph({
+      container: 'container',
+      renderer: 'svg',
+      width,
+      height,
+      fitView: true,
+      layout: {
+        type: 'dagre',
+        rankdir: 'LR',
+        nodesep: 50,
+        ranksep: 200
+      },
+      defaultNode: {
+        shape: 'round-rect',
+        style: {
+          stroke: '#72CC4A',
+          width: 200,
+          fill: '#666',
+          opacity: 1
+        }
+      }
+    });
+
+    graph.data(data);
+    graph.render();
+  </script>
+</body>
+</html>
