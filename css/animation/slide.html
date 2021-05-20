@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <style>
+    ul, li {
+      list-style: none;
+      padding: 0;
+    }
+    .notice-slide-box {
+      width: 500px;
+      line-height: 30px;
+      overflow: hidden;
+      background-color: #333;
+    }
+    .notice-list {
+      display: inline-flex;
+      background-color: #fff;
+      animation: notice-animation 10s linear infinite;
+    }
+    .notice-list:hover {
+      animation-play-state: paused;
+    }
+    .notice-list > .notice-item {
+      margin-right: 10px;
+      white-space: nowrap;
+    }
+    @keyframes notice-animation {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="notice-slide-wrap">
+    <div class="notice-slide-box">
+      <div class="notice-list">
+        <li class="notice-item">
+          <a href="#">11111111</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">22222222</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">33333333333333333</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">444444444444</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">55555555555555555</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">6666666666666</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">777777777777777777777777</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">88888</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">11111111</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">22222222</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">33333333333333333</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">444444444444</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">55555555555555555</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">6666666666666</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">777777777777777777777777</a>
+        </li>
+        <li class="notice-item">
+          <a href="#">88888</a>
+        </li>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
